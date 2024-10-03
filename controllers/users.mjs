@@ -1,13 +1,20 @@
-import { userAuth } from '../model/user-auth.mjs'
+import { userDB } from '../model/userAuth.mjs'
+import { SaltRounds } from '../config/config.mjs'
+import { userSchema } from '../schemas/userSchema.mjs'
+
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
-import { SaltRounds } from '../config/config.mjs'
 
 export class userController {
   static async register (req, res) {
     const { username, password } = req.body
-    const userExists = await userAuth.findUserbyUsername(username)
 
+    const validación = userSchema.safeParse({ username, password })
+    if (!validación.success) {
+      return res.status(400).send({ error: 'User data is not valid' })
+    }
+
+    const userExists = await userDB.findUserbyUsername(username)
     if (userExists) {
       res.status(400).send({ error: 'User already exists' })
     }
@@ -16,7 +23,7 @@ export class userController {
 
     const hashedPassword = await bcrypt.hash(password, SaltRounds)
 
-    const result = await userAuth.registerUser(id, username, hashedPassword)
+    const result = await userDB.registerUser(id, username, hashedPassword)
 
     res.send(result)
   }

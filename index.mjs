@@ -14,6 +14,7 @@ app.set('view engine', 'pug') // Para que use pug como motor de plantillas
 app.set('views', './views') // Para que use la carpeta views
 
 app.use('/', UserRouter) // Para las rutas de usuarios
+app.post('/register', UserRouter)
 app.use('/tasks', TaskRouter)
 
 app.listen(PORT, () => {
