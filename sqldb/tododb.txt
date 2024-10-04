@@ -1,0 +1,29 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS tododb;
+USE tododb;
+
+-- Crear la tabla user
+CREATE TABLE user (
+    id BINARY(16) PRIMARY KEY,        -- UUID almacenado como BINARY(16)
+    username VARCHAR(100) NOT NULL UNIQUE,  -- Nombre de usuario único
+    password VARCHAR(255) NOT NULL,   -- Contraseña del usuario (hashed)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Fecha de última actualización
+);
+
+-- Crear la tabla task
+CREATE TABLE task (
+    id BINARY(16) PRIMARY KEY,        -- UUID almacenado como BINARY(16)
+    user_id BINARY(16),               -- UUID del usuario (relación con la tabla user)
+    title VARCHAR(255) NOT NULL,      -- Título de la tarea
+    description TEXT,                 -- Descripción de la tarea
+    status ENUM('pending', 'completed') DEFAULT 'pending', -- Estado de la tarea
+    due_date DATE,                    -- Fecha de vencimiento de la tarea (opcional)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Fecha de última actualización
+
+    -- Clave foránea para asegurar la relación entre user y task
+    CONSTRAINT fk_user
+      FOREIGN KEY (user_id) REFERENCES user(id)
+      ON DELETE CASCADE
+);
