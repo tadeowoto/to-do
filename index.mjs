@@ -16,6 +16,7 @@ app.set('views', './views') // Para que use la carpeta views
 
 app.use('/', UserRouter) // Para las rutas de usuarios
 app.post('/register', UserRouter)
+app.post('/login', UserRouter)
 app.use('/tasks', TaskRouter)
 
 app.listen(PORT, () => {

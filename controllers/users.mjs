@@ -32,7 +32,19 @@ export class userController {
   }
 
   static async login (req, res) {
-    const { email, password } = req.body
-    console.log(email, password)
+    const { username, password } = req.body
+    const user = await userDB.findUserbyUsername(username)
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password) // aca debo comparar el password
+    if (!isValidPassword) {
+      throw new Error('Invalid password')
+    }
+
+    const { password: _, ...publicUser } = user
+
+    return publicUser
   }
 }

@@ -17,6 +17,6 @@ export class userDB {
 
   static async registerUser (id, username, hashedPassword) {
     const [result] = await connection.execute('INSERT INTO user (id, username, password) VALUES (?, ?, ?)', [id, username, hashedPassword])
-    return result.insertId
+    return result.insertId // esto devuelve el ID del usuario insertado
   }
 }
