@@ -11,8 +11,10 @@ const config = {
 const connection = await mysql.createConnection(config)
 export class tasksDB {
   static async getTasksByUserId ({ userId }) {
-    const result = await connection.query('SELECT * FROM task WHERE user_id = ?', [userId])
-    return result
+    // const result = await connection.query('SELECT * FROM task WHERE user_id = ?', [userId])
+    const userIdHex = Buffer.from(userId.data).toString('hex')
+    const result = await connection.query('SELECT * FROM task WHERE user_id = UNHEX(?)', [userIdHex])
+    return [result]
   }
 
   static async createTask () {}

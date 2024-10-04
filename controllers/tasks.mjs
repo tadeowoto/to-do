@@ -14,13 +14,14 @@ export class TasksController {
       const userId = data.id
       const tasks = await tasksDB.getTasksByUserId({ userId })
       if (!tasks) {
-        res.render('tasks', { tasks: [] })
+        return res.render('tasks', { tasks: [] })
       }
-      res.render('tasks', { tasks })
+      return res.render('tasks', { tasks })
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         return res.status(401).send({ error: 'Token expired' })
       }
+      res.send(error.message)
       return res.status(401).send({ error: 'Invalid token' })
     }
   }
