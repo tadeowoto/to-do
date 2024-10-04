@@ -1,18 +1,18 @@
 import mysql from 'mysql2/promise'
-import { PORT } from '../config/config.mjs'
+import { DB_PORT } from '../config/config.mjs'
 
 const config = {
   host: 'localhost',
   user: 'root',
-  port: PORT,
+  port: DB_PORT,
   password: '',
   database: 'tododb'
 }
 const connection = await mysql.createConnection(config)
-export class DB {
-  static async getTasks ({ userId }) {
-    const result = await connection.query('SELECT * FROM tasks WHERE userId = ?', [userId])
-    console.log(result)
+export class tasksDB {
+  static async getTasksByUserId ({ userId }) {
+    const result = await connection.query('SELECT * FROM task WHERE user_id = ?', [userId])
+    return result
   }
 
   static async createTask () {}

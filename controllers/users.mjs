@@ -1,6 +1,7 @@
 import { userDB } from '../model/userAuth.mjs'
-import { SaltRounds } from '../config/config.mjs'
+import { SaltRounds, SECRET_KEY } from '../config/config.mjs'
 import { validateUser } from '../schemas/userSchema.mjs'
+import jwt from 'jsonwebtoken'
 
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
@@ -27,8 +28,8 @@ export class userController {
     const hashedPassword = await bcrypt.hash(password, SaltRounds)
 
     const result = await userDB.registerUser(id, username, hashedPassword)
-
-    res.status(201).json({ message: 'User registered successfully', userId: result })
+    console.log(result)
+    res.redirect('/')
   }
 
   static async login (req, res) {
@@ -43,8 +44,16 @@ export class userController {
       throw new Error('Invalid password')
     }
 
-    const { password: _, ...publicUser } = user
+    const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, {
+      expiresIn: '1h'
+    })
 
-    return publicUser
+    res.cookie('access_token', token, {
+      httpOnly: true, // la cookie solo se puede leer por el servidor
+      secure: process.env.NODE_ENV === 'production', // la cookie solo se puede ser accedida por https
+      sameSite: 'strict', // la cookie solo se puede ser accedida por la misma sitio
+      maxAge: 1000 * 60 * 60 // tiempo de vida de la cookie en milisegundos
+    })
+    res.redirect('/tasks')
   }
 }

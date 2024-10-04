@@ -3,11 +3,13 @@ import { PORT } from './config/config.mjs'
 import { TaskRouter } from './routes/tasks.mjs'
 import { UserRouter } from './routes/user.mjs'
 import { corsMiddleware } from './middlewares/cors.mjs'
+import cookieParser from 'cookie-parser'
 const app = express()
 
 // Middlewares
 app.use(express.json()) // Para leer el body de las peticiones
 app.use(corsMiddleware) // cors
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: true })) // Para leer datos de formularios
 app.disable('x-powered-by') // Para que no aparezca el Nginx
 
