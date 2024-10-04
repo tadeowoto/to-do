@@ -8,6 +8,7 @@ const app = express()
 // Middlewares
 app.use(express.json()) // Para leer el body de las peticiones
 app.use(corsMiddleware) // cors
+app.use(express.urlencoded({ extended: true })) // Para leer datos de formularios
 app.disable('x-powered-by') // Para que no aparezca el Nginx
 
 app.set('view engine', 'pug') // Para que use pug como motor de plantillas

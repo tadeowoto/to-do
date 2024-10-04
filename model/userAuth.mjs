@@ -1,17 +1,17 @@
 import mysql from 'mysql2/promise'
-import { PORT } from '../config/config.mjs'
+import { DB_PORT } from '../config/config.mjs'
 
 const config = {
   host: 'localhost',
   user: 'root',
-  port: PORT,
+  port: DB_PORT,
   password: '',
   database: 'tododb'
 }
 const connection = await mysql.createConnection(config)
 export class userDB {
   static async findUserbyUsername (username) {
-    const [result] = await connection.execute('SELECT * FROM users WHERE username = ?', [username])
+    const [result] = await connection.execute('SELECT * FROM user WHERE username = ?', [username])
     return result[0]
   }
 
